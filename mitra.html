@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Mitra</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Dashboard Mitra</h1>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Saldo Total: <span id="saldo">0</span></h5>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#topUpModal">Top Up</button>
+                <button class="btn btn-warning" data-toggle="modal" data-target="#withdrawModal">Withdraw</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Top Up -->
+    <div class="modal fade" id="topUpModal" tabindex="-1" role="dialog" aria-labelledby="topUpModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="topUpModalLabel">Top Up Saldo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="topUpForm">
+                        <div class="form-group">
+                            <label for="topUpAmount">Jumlah</label>
+                            <input type="number" class="form-control" id="topUpAmount" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Kirim</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Withdraw -->
+    <div class="modal fade" id="withdrawModal" tabindex="-1" role="dialog" aria-labelledby="withdrawModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="withdrawModalLabel">Withdraw Saldo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="withdrawForm">
+                        <div class="form-group">
+                            <label for="withdrawAmount">Jumlah</label>
+                            <input type="number" class="form-control" id="withdrawAmount" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning">Kirim</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
