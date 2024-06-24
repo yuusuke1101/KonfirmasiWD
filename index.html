@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin Mitra</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            transition: background-color 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #fff;
+            text-align: center;
+        }
+
+        .button {
+            display: block;
+            margin: 10px auto;
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .button:hover,
+        .button:focus,
+        .button:active {
+            background-color: #0056b3;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #clock {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            color: #555;
+            padding: 5px 10px;
+        }
+
+        .rotate-out {
+            animation: rotate-out 1s forwards;
+        }
+
+        @keyframes rotate-out {
+            0% { transform: rotate(0deg); opacity: 1; }
+            100% { transform: rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="clock"></div>
+    <div class="container">
+        <h1 id="greeting">Selamat Datang di Halaman Admin Mitra</h1>
+        <h2>Menu Admin Mitra</h2>
+        <a href="admin.html" class="button">Edit Data Akun Mitra</a>
+        <a href="mitra.html" class="button">Edit Data Warung</a>
+        <a href="daftar_warung.html" class="button">Pengajuan Pendaftaran Warung</a> 
+        <a href="ubah_password.html" class="button">Pengajuan Ubah Password Akun</a>
+        <a href="lupa_pin_password.html" class="button">Kirim Ulang Notifikasi Detail Akun</a>
+        <a href="kirim_ulang_notifikasi.html" class="button">Lupa Password Akun Mitra</a>
+        <a href="chat_admin.html" class="button">Chat Admin</a>
+        <a href="tutorial.html" class="button">Tutorial</a>
+        <a href="pengajuan_nbh.html" class="button">Pengajuan NBH</a>
+        <a href="status_admin.html" class="button">Cek Status Admin</a>
+        <a href="jadwal_proses_wd.html" class="button">Jadwal Proses WD</a>
+        <a href="claim_pengembalian_modal.html" class="button">Claim Pengembalian Modal (Cashback 100%)</a>
+        <a href="download.html" class="button">Download Aplikasi Bemat</a>
+        <a href="https://langitindoniaga.co.id/" class="button" onclick="return confirm('Apakah Anda yakin ingin membuka link login Bemat?')">Link Login Bemat</a>
+        <a href="pengajuan_nbh_pendaftaran_warung.html" class="button">Pengajuan NBH Pendaftaran Warung</a>
+        <!-- Tambahkan tautan lainnya sesuai kebutuhan -->
+    </div>
+    <script>
+        function updateTime() {
+            var now = new Date();
+            var hours = ("0" + now.getHours()).slice(-2);
+            var minutes = ("0" + now.getMinutes()).slice(-2);
+            var seconds = ("0" + now.getSeconds()).slice(-2);
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+
+            var greetingText = "Selamat ";
+            if (hours < 4) greetingText += "Malam";
+            else if (hours < 10) greetingText += "Pagi";
+            else if (hours < 14) greetingText += "Siang";
+            else if (hours < 19) greetingText += "Sore";
+            else greetingText += "Malam";
+            document.getElementById('greeting').textContent = `${greetingText} Mitra Bemat di dashboard menu bantuan admin`;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        document.querySelectorAll('.button').forEach(link => {
+            link.addEventListener('click', function(event) {
+                if (this.href.startsWith("http")) return;
+                event.preventDefault();
+                document.body.classList.add('rotate-out');
+                setTimeout(() => {
+                    window.location.href = this.href;
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
