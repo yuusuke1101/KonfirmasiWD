@@ -1,76 +1,90 @@
-// Simulasi penyimpanan saldo mitra
-let saldoMitra = 0;
-
-// Fungsi untuk mengupdate tampilan saldo mitra
-function updateSaldo() {
-    document.getElementById('saldo').textContent = saldoMitra;
-}
-
-// Mengirim permintaan Top Up
-document.getElementById('topUpForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const amount = parseFloat(document.getElementById('topUpAmount').value);
-    if (amount > 0) {
-        // Kirim permintaan ke Admin
-        alert('Permintaan Top Up sebesar ' + amount + ' telah dikirim ke Admin.');
-        // Simulasi: tambahkan permintaan ke daftar top up di admin
-        const requestHtml = `<div class="alert alert-primary" role="alert">
-            Permintaan Top Up: ${amount} 
-            <button class="btn btn-success btn-sm" onclick="approveTopUp(${amount})">Terima</button>
-            <button class="btn btn-danger btn-sm" onclick="rejectTopUp()">Tolak</button>
-        </div>`;
-        document.getElementById('topUpRequests').innerHTML += requestHtml;
-    }
+document.addEventListener('DOMContentLoaded', (event) => {
+    loadTableData();
 });
 
-// Mengirim permintaan Withdraw
-document.getElementById('withdrawForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const amount = parseFloat(document.getElementById('withdrawAmount').value);
-    if (amount > 0 && amount <= saldoMitra) {
-        // Kirim permintaan ke Admin
-        alert('Permintaan Withdraw sebesar ' + amount + ' telah dikirim ke Admin.');
-        // Simulasi: tambahkan permintaan ke daftar withdraw di admin
-        const requestHtml = `<div class="alert alert-warning" role="alert">
-            Permintaan Withdraw: ${amount} 
-            <button class="btn btn-success btn-sm" onclick="approveWithdraw(${amount})">Terima</button>
-            <button class="btn btn-danger btn-sm" onclick="rejectWithdraw()">Tolak</button>
-        </div>`;
-        document.getElementById('withdrawRequests').innerHTML += requestHtml;
+function sendMessage(username, nama, noWhatsApp) {
+    if (noWhatsApp.startsWith('0')) {
+        noWhatsApp = '+62' + noWhatsApp.slice(1);
     }
-});
 
-// Fungsi untuk menerima Top Up
-function approveTopUp(amount) {
-    saldoMitra += amount;
-    updateSaldo();
-    alert('Top Up sebesar ' + amount + ' telah diterima.');
-    // Hapus permintaan dari daftar
-    event.target.parentElement.remove();
+    var message = "Assalamualaikum saya dari bemat, memberitahukan kepada " + nama + " sebagai pemilik akun " + username + " untuk segera melengkapi data bank karena akun tersebut melakukan Withdraw/Penarikan, supaya proses tidak terjadi pending, harap lengkapi data bank dengan mengisi form dibawah\n\nNama bank :\nNomor Rekening :\nAtas Nama :";
+
+    var url = "https://wa.me/" + noWhatsApp + "?text=" + encodeURIComponent(message);
+    window.open(url, '_blank');
 }
 
-// Fungsi untuk menolak Top Up
-function rejectTopUp() {
-    alert('Permintaan Top Up ditolak.');
-    // Hapus permintaan dari daftar
-    event.target.parentElement.remove();
+function addRow(username, nama, noWhatsApp) {
+    var table = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+    var newRow = table.insertRow();
+
+    var cell1 = newRow.insertCell(0);
+    var cell2 = newRow.insertCell(1);
+    var cell3 = newRow.insertCell(2);
+    var cell4 = newRow.insertCell(3);
+
+    cell1.innerHTML = username;
+    cell2.innerHTML = nama;
+    cell3.innerHTML = noWhatsApp;
+    cell4.innerHTML = `
+        <div class="action-buttons">
+            <button class="send-button" onclick="sendMessage('${username}', '${nama}', '${noWhatsApp}')">Kirim Ulang</button>
+            <button class="edit-button" onclick="editRow(this)">Edit</button>
+            <button class="delete-button" onclick="deleteRow(this)">Hapus</button>
+        </div>
+    `;
+
+    saveTableData(); // Save the table data after adding a new row
 }
 
-// Fungsi untuk menerima Withdraw
-function approveWithdraw(amount) {
-    saldoMitra -= amount;
-    updateSaldo();
-    alert('Withdraw sebesar ' + amount + ' telah diterima.');
-    // Hapus permintaan dari daftar
-    event.target.parentElement.remove();
+function editRow(button) {
+    var row = button.parentNode.parentNode.parentNode;
+    var username = row.cells[0].innerHTML;
+    var nama = row.cells[1].innerHTML;
+    var noWhatsApp = row.cells[2].innerHTML;
+
+    document.getElementById('username').value = username;
+    document.getElementById('nama').value = nama;
+    document.getElementById('noWhatsApp').value = noWhatsApp;
+
+    row.parentNode.removeChild(row);
+    saveTableData(); // Save the table data after editing
 }
 
-// Fungsi untuk menolak Withdraw
-function rejectWithdraw() {
-    alert('Permintaan Withdraw ditolak.');
-    // Hapus permintaan dari daftar
-    event.target.parentElement.remove();
+function deleteRow(button) {
+    var row = button.parentNode.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+    saveTableData(); // Save the table data after deleting a row
 }
 
-// Inisialisasi tampilan awal saldo
-updateSaldo();
+function handleSubmit(event) {
+    event.preventDefault();
+    var username = document.getElementById('username').value;
+    var nama = document.getElementById('nama').value;
+    var noWhatsApp = document.getElementById('noWhatsApp').value;
+
+    sendMessage(username, nama, noWhatsApp);
+    addRow(username, nama, noWhatsApp);
+
+    document.getElementById('form').reset();
+}
+
+function saveTableData() {
+    var tableData = [];
+    var table = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+    for (var i = 0, row; row = table.rows[i]; i++) {
+        var rowData = {
+            username: row.cells[0].innerHTML,
+            nama: row.cells[1].innerHTML,
+            noWhatsApp: row.cells[2].innerHTML
+        };
+        tableData.push(rowData);
+    }
+    localStorage.setItem('tableData', JSON.stringify(tableData));
+}
+
+function loadTableData() {
+    var tableData = JSON.parse(localStorage.getItem('tableData')) || [];
+    tableData.forEach(data => {
+        addRow(data.username, data.nama, data.noWhatsApp);
+    });
+}
